@@ -87,7 +87,6 @@ public class Teller {
         String accountNumber = inputUtil.readString(ENTER_ACCOUNT_NUMBER);
 
         try {
-            bankService.getAccountDetails(accountNumber);
             transactionLogger.printHistory(accountNumber);
         } catch (IllegalArgumentException e) {
             System.out.println("Failed to retrieve transaction history: " + e.getMessage());

@@ -21,6 +21,9 @@ public class BankServiceImpl implements BankService {
         if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be positive.");
         }
+        if (!accountRepository.accountExists(accountNumber)) {
+            throw new IllegalArgumentException("Deposit failed: Account not found.");
+        }
         BankAccount account = accountRepository.getAccount(accountNumber);
         account.deposit(amount);
         Transaction transaction = new Transaction()
@@ -34,6 +37,9 @@ public class BankServiceImpl implements BankService {
         if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be positive.");
         }
+        if (!accountRepository.accountExists(accountNumber)) {
+            throw new IllegalArgumentException("Withdrawal failed: Account not found.");
+        }
         BankAccount account = accountRepository.getAccount(accountNumber);
         account.withdraw(amount);
         Transaction transaction = new Transaction()
@@ -46,6 +52,12 @@ public class BankServiceImpl implements BankService {
     public void transfer(String fromAccountNumber, String toAccountNumber, double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Transfer amount must be positive.");
+        }
+        if (!accountRepository.accountExists(fromAccountNumber)) {
+            throw new IllegalArgumentException("Transfer failed: Source account not found.");
+        }
+        if (!accountRepository.accountExists(toAccountNumber)) {
+            throw new IllegalArgumentException("Transfer failed: Destination account not found.");
         }
         BankAccount fromAccount = accountRepository.getAccount(fromAccountNumber);
         BankAccount toAccount = accountRepository.getAccount(toAccountNumber);
@@ -61,11 +73,17 @@ public class BankServiceImpl implements BankService {
     }
 
     public String getAccountDetails(String accountNumber) {
+        if (!accountRepository.accountExists(accountNumber)) {
+            throw new IllegalArgumentException("Account details failed: Account not found.");
+        }
         BankAccount account = accountRepository.getAccount(accountNumber);
         return account.getAccountDetails();
     }
 
     public double getAccountBalance(String accountNumber) {
+        if (!accountRepository.accountExists(accountNumber)) {
+            throw new IllegalArgumentException("Balance check failed: Account not found.");
+        }
         BankAccount account = accountRepository.getAccount(accountNumber);
         return account.getBalance();
     }
